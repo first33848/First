@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secret Message 💖</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Kanit", sans-serif;
+      background-color: #fff0f5;
+      text-align: center;
+      overflow: hidden;
+    }
+    .screen {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      transition: transform 1s ease-in-out, opacity 0.8s ease;
+    }
+    .active {
+      display: flex;
+      z-index: 1;
+    }
+    .slide-left-in {
+      animation: slideIn 1s forwards;
+    }
+    .slide-out-left {
+      animation: slideOutLeft 1s forwards;
+    }
+    @keyframes slideIn {
+      0% { transform: translateX(100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutLeft {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(-100%); opacity: 0; }
+    }
+
+    #pinDisplay {
+      font-size: 2em;
+      letter-spacing: 15px;
+      margin: 20px;
+      color: #ff69b4;
+    }
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 15px;
+      justify-content: center;
+    }
+    .keypad button {
+      font-size: 1.5em;
+      padding: 15px;
+      border-radius: 10px;
+      border: none;
+      background-color: #ffe4f0;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .keypad button:hover {
+      background-color: #ffc0cb;
+    }
+
+    #fullEnvelope {
+      width: 300px;
+      height: 200px;
+      background: linear-gradient(to bottom right, #fffafc, #ffe4f0);
+      border: 3px dashed #ffb6c1;
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(255, 182, 193, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 1s ease-in-out;
+    }
+    .zoomed {
+      transform: scale(10);
+    }
+    .open-text {
+      font-size: 1.5em;
+      color: #ff69b4;
+      font-weight: bold;
+    }
+
+    #love-question h1 {
+      font-size: 2em;
+      margin-bottom: 30px;
+      color: #ff69b4;
+    }
+    #love-buttons {
+      width: 100%;
+      height: 200px;
+      position: relative;
+    }
+    #yesBtn1 {
+      font-size: 1.5em;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      width: 120px;
+      height: 60px;
+      cursor: pointer;
+      background-color: #ff69b4;
+      color: white;
+      font-weight: bold;
+      position: absolute;
+      left: 20%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    #noBtn {
+      font-size: 1.5em;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      width: 120px;
+      height: 60px;
+      cursor: pointer;
+      background-color: #ffd1dc;
+      color: #333;
+      position: absolute;
+      left: 70%;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: all 0.3s ease;
+    }
+
+    #screen4 h1 {
+      font-size: 3em;
+      color: #ff1493;
+      margin-bottom: 10px;
+    }
+
+    #screen5 {
+      background: linear-gradient(to bottom, #fff0f5, #ffe4f0);
+    }
+    #screen5 h2 {
+      font-size: 2.2em;
+      color: #d63384;
+      margin-bottom: 15px;
+    }
+    #screen5 p {
+      font-size: 1.3em;
+      margin: 10px 0;
+      color: #555;
+    }
+
+    .heart {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: url('https://cdn-icons-png.flaticon.com/512/833/833472.png') no-repeat center;
+      background-size: contain;
+      animation: floatUp 4s infinite;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- หน้า 1 -->
+<div id="screen1" class="screen active">
+  <h1>🔐 Enter your secret PIN</h1>
+  <p style="color: gray;">Hint: Someone's birthday? 🎂</p>
+  <div id="pinDisplay">____</div>
+  <div class="keypad">
+    <button onclick="pressNum('1')">1</button>
+    <button onclick="pressNum('2')">2</button>
+    <button onclick="pressNum('3')">3</button>
+    <button onclick="pressNum('4')">4</button>
+    <button onclick="pressNum('5')">5</button>
+    <button onclick="pressNum('6')">6</button>
+    <button onclick="pressNum('7')">7</button>
+    <button onclick="pressNum('8')">8</button>
+    <button onclick="pressNum('9')">9</button>
+    <button onclick="pressNum('0')">0</button>
+    <button onclick="clearPIN()">←</button>
+    <button onclick="checkPIN()">Enter</button>
+  </div>
+</div>
+
+<!-- หน้า 2 -->
+<div id="screen2" class="screen">
+  <h1>You’ve got a letter! 💌</h1>
+  <div id="fullEnvelope" onclick="openEnvelope()">
+    <div class="open-text">OPEN</div>
+  </div>
+</div>
+
+<!-- หน้า 3 -->
+<div id="screen3" class="screen">
+  <div id="love-question">
+    <h1>Will you be my girlfriend? 🥺💕</h1>
+  </div>
+  <div id="love-buttons">
+    <button id="yesBtn1">YES</button>
+    <button id="noBtn">NO</button>
+  </div>
+</div>
+
+<!-- หน้า 4 -->
+<div id="screen4" class="screen">
+  <h1>YAY! You're mine now 💖</h1>
+  <p style="font-size: 1.3em; color: #ff69b4;">Let's make unforgettable memories together!</p>
+</div>
+
+<!-- หน้า 5 -->
+<div id="screen5" class="screen">
+  <h2>💗 Happy Anniversary 💗</h2>
+  <p>ขอบคุณที่มาเป็นแฟนกันนะ</p>
+  <p>พี่รู้สึกพิเศษมากที่ได้เจอน้อง</p>
+  <p>มันทำให้พี่ยิ้มได้ตลอดเลย</p>
+  <p>พี่อยากจะดูแล ให้ดีที่สุดเท่าที่จะทำได้</p>
+  <p style="font-size: 1.8em; color: #ff1493;">รักนะ 💖</p>
+</div>
+
+<script>
+  let pinInput = "";
+  function pressNum(num) {
+    if (pinInput.length < 4) {
+      pinInput += num;
+      updateDisplay();
+    }
+  }
+  function updateDisplay() {
+    document.getElementById('pinDisplay').textContent = pinInput.replace(/./g, '●') + "_".repeat(4 - pinInput.length);
+  }
+  function clearPIN() {
+    pinInput = pinInput.slice(0, -1);
+    updateDisplay();
+  }
+  function checkPIN() {
+    if (pinInput === '2307') {
+      const screen1 = document.getElementById('screen1');
+      const screen2 = document.getElementById('screen2');
+
+      screen1.classList.add('slide-out-left');
+      screen2.classList.add('active', 'slide-left-in');
+
+      setTimeout(() => {
+        screen1.classList.remove('active', 'slide-out-left');
+        screen2.classList.remove('slide-left-in');
+      }, 1000);
+    } else {
+      alert("Incorrect PIN 😢 Try again!");
+      pinInput = "";
+      updateDisplay();
+    }
+  }
+
+  function openEnvelope() {
+    document.getElementById('fullEnvelope').classList.add('zoomed');
+    setTimeout(() => {
+      document.getElementById('screen2').classList.remove('active');
+      document.getElementById('screen3').classList.add('active');
+    }, 1500);
+  }
+
+  function goToScreen4() {
+    document.getElementById('screen3').classList.remove('active');
+    document.getElementById('screen4').classList.add('active');
+    setTimeout(() => {
+      document.getElementById('screen4').classList.remove('active');
+      document.getElementById('screen5').classList.add('active', 'slide-left-in');
+      startHeartAnimation();
+    }, 3000);
+  }
+
+  document.getElementById('yesBtn1').addEventListener('click', goToScreen4);
+
+  let noBtn = document.getElementById('noBtn');
+  function moveNoBtn() {
+    const maxX = window.innerWidth - noBtn.offsetWidth;
+    const maxY = window.innerHeight - noBtn.offsetHeight;
+    const newX = Math.random() * maxX;
+    const newY = Math.random() * maxY;
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+  }
+  ['mouseover', 'mousedown', 'mousemove', 'click'].forEach(event => {
+    noBtn.addEventListener(event, moveNoBtn);
+  });
+
+  function startHeartAnimation() {
+    const screen = document.getElementById("screen5");
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 4 + Math.random() * 2 + "s";
+      screen.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }, 300);
+  }
+
+  updateDisplay();
+</script>
+</body>
+</html>
